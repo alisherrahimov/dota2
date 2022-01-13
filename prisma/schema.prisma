@@ -1,0 +1,36 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+model User {
+  id          String @id @default(uuid()) 
+  username    String 
+  email       String @unique 
+  password    String 
+  image       String @default("https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Movies {
+  id          String @id @default(uuid())
+  title       String
+  description String
+  image       String 
+  stars       Float @default(0)
+  movie_time  String
+  url         String
+  hero        String
+  view       Int @default(0)
+  rampage     Boolean @default(false) 
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+} 
+
