@@ -1,17 +1,16 @@
 import { PrismaClient } from "prisma/prisma-client"
 import { errorHandler } from "../config/errorHandler";
 const client = new PrismaClient()
-import data from "../hero.json"
 const getByIdMovie = async (req, res) => {
     try {
         const { id } = req.params;
         const movie = await client.movies.findMany({
             where: {
-                id: id
+                hero: { some: { tags: { id: id } } }
             },
             include: {
-                hero: true
-            }
+                hero: true,
+            },
         })
         res.status(200).json({ message: "Tag created", movie })
     } catch (error) {

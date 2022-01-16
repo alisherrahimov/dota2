@@ -14,13 +14,14 @@ const create = async (req, res) => {
             data: {
                 title: title,
                 description: description,
-                hero: { connect: { id: tag_id } },
+                hero: { create: { tags: { connect: { id: tag_id } } } },
                 movie_time: movie_time,
                 rampage: rampage == "true" ? true : false,
                 image: file[0].path,
                 url: file[1].path,
             }
         })
+
         res.status(200).json({ message: "Movie created", data: movie });
     } catch (error) {
         errorHandler(error, res);
@@ -74,7 +75,7 @@ const deleted = async (req, res) => {
 }
 const getAll = async (req, res) => {
     try {
-        const movies = await client.movies.findMany();
+        const movies = await client.movies.findMany({ include: { hero: { include: { tags: true } } } });
         res.status(200).json({ message: "Movies found", data: movies });
     } catch (error) {
         errorHandler(error, res);
@@ -84,9 +85,10 @@ const getOne = async (req, res) => {
     const { id } = req.params;
     try {
         const movie = await client.movies.findFirst({
-            where: { id: id }, include: { hero: true }
+            where: { id: id }, include: { hero: { include: { tags: true } } }
         });
-        res.status(200).json({ message: "Movie found", data: movie });
+        const tags = await client.tags.findMany({ include: { Movies: { include: { movies: true } } }, take: 15, })
+        res.status(200).json({ message: "Movie found", data: movie, tags: tags });
     } catch (error) {
         errorHandler(error, res);
     }

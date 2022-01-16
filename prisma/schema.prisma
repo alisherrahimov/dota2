@@ -27,7 +27,7 @@ model Movies {
   stars       Float @default(0)
   movie_time  String
   url         String
-  hero        Tags[]
+  hero        MovieAndTags[]
   view        Int @default(0)
   rampage     Boolean @default(false) 
   createdAt   DateTime @default(now())
@@ -38,9 +38,17 @@ model Tags {
   id          String @id @default(uuid())
   name        String
   image       String
+  Movies      MovieAndTags[]
   name_key    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+model MovieAndTags {
+  id          String @id @default(uuid())
+  tags        Tags? @relation(fields: [tags_id], references: [id], onDelete: SetNull)
   movies      Movies? @relation(fields: [movies_id], references: [id], onDelete: SetNull)
-  movies_id   String?
+  movies_id   String
+  tags_id     String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
