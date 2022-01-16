@@ -5,31 +5,31 @@ import { format } from "../config/format";
 import fs from "fs"
 const client = new PrismaClient();
 const create = async (req, res) => {
-    const { title, description, hero, rampage } = req.body;
+    const { title, description, rampage, tag_id } = req.body;
     const file = req.files;
+    const duration = await getVideoDurationInSeconds(file[1].path)
+    const movie_time = format(duration)
     try {
-        const duration = await getVideoDurationInSeconds(file[1].path)
-        const movie_time = format(duration)
-
         const movie = await client.movies.create({
             data: {
                 title: title,
                 description: description,
-                hero: hero,
-                movie_time: movie_time.toString(),
-                rampage: rampage.toString() == "true" ? true : false,
+                hero: { connect: { id: tag_id } },
+                movie_time: movie_time,
+                rampage: rampage == "true" ? true : false,
                 image: file[0].path,
                 url: file[1].path,
             }
-        });
+        })
         res.status(200).json({ message: "Movie created", data: movie });
     } catch (error) {
         errorHandler(error, res);
     }
+
 }
 const update = async (req, res) => {
     const { id } = req.params;
-    const { title, description, hero, rampage } = req.body;
+    const { title, description, rampage, tag_id } = req.body;
     const file = req.files;
     let duration
     if (file !== undefined) {
@@ -41,9 +41,9 @@ const update = async (req, res) => {
             data: {
                 title: { set: title },
                 description: { set: description },
-                hero: { set: hero },
-                movie_time: { set: duration.toString() },
-                rampage: { set: rampage.toString() == "true" ? true : false },
+                hero: { set: { id: tag_id } },
+                movie_time: { set: duration },
+                rampage: { set: rampage == "true" ? true : false },
                 image: { set: file[0].path },
                 url: { set: file[1].path },
             },
@@ -84,7 +84,7 @@ const getOne = async (req, res) => {
     const { id } = req.params;
     try {
         const movie = await client.movies.findFirst({
-            where: { id: id }
+            where: { id: id }, include: { hero: true }
         });
         res.status(200).json({ message: "Movie found", data: movie });
     } catch (error) {
