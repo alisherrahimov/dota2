@@ -10,7 +10,7 @@ const register = async (req, res) => {
     try {
         const user = await client.user.findFirst({ where: { email: email } });
         if (user) {
-            res.status(400).json({ message: "User already exists" });
+            res.status(400).json({ message: "User already exists", success: false });
         }
         else {
             const hash = bcrypt.hashSync(password, 10);
@@ -22,7 +22,7 @@ const register = async (req, res) => {
                     password: hash
                 }
             });
-            res.status(200).json({ message: "User created", data: newUser });
+            res.status(200).json({ success: true, data: newUser });
         }
 
     } catch (error) {
@@ -34,17 +34,17 @@ const login = async (req, res) => {
     try {
         const user = await client.user.findFirst({ where: { email: email } });
         if (!user) {
-            res.status(400).json({ message: "User does not exist" });
+            res.status(400).json({ message: "User does not exist", success: false });
         }
         else {
             const isValid = await bcrypt.compare(password, user.password);
 
             if (!isValid) {
-                res.status(400).json({ message: "Invalid password" });
+                res.status(400).json({ message: "Invalid password", success: false });
             }
             else {
                 const token = jwt.sign({ id: user.id }, process.env.SECRET, { expiresIn: "7d" });
-                res.status(200).json({ message: "User logged in", token: token });
+                res.status(200).json({ message: "User logged in", success: true, token: token });
             }
         }
     } catch (error) {

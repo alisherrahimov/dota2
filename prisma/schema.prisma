@@ -15,6 +15,7 @@ model User {
   email       String @unique 
   password    String 
   image       String @default("https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png")
+  comments    Comment[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
@@ -49,6 +50,15 @@ model MovieAndTags {
   movies      Movies? @relation(fields: [movies_id], references: [id], onDelete: SetNull)
   movies_id   String
   tags_id     String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+model Comment {
+  id          String @id @default(uuid())
+  user_id     String
+  author      User? @relation(fields: [user_id], references: [id], onDelete: SetNull)
+  movies_id   String
+  content     String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }

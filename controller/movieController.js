@@ -88,7 +88,8 @@ const getOne = async (req, res) => {
             where: { id: id }, include: { hero: { include: { tags: true } } }
         });
         const tags = await client.tags.findMany({ include: { Movies: { include: { movies: true } } }, take: 15, })
-        res.status(200).json({ message: "Movie found", data: movie, tags: tags });
+        const comments = await client.comment.findMany({ where: { movies_id: id }, include: { author: true } })
+        res.status(200).json({ message: "Movie found", data: movie, tags: tags, comments: comments });
     } catch (error) {
         errorHandler(error, res);
     }
