@@ -52,22 +52,22 @@ export const searchMovie = async (io, text) => {
                 hero: { every: { tags: { name: { contains: text, mode: "insensitive" } } } }
             }
         });
-        console.log(movies)
+
         if (movies.length > 0) {
-            return io.emit("search", { success: true, data: movies });
+            io.emit("search", { success: true, data: movies });
         } else {
-            return io.emit("search", { success: false, message: "Movie not found" });
+            io.emit("search", { success: false, message: "Movie not found" });
         }
     } catch (error) {
-        return io.emit("search", { success: false, data: error });
+        io.emit("search", { success: false, data: error });
     }
 }
 export const getAll = async (io) => {
     try {
         const movies = await client.movies.findMany({ include: { hero: { include: { tags: true } } } });
-        return io.emit("all", { success: true, data: movies });
+        io.emit("all_movies", { success: true, data: movies });
     } catch (error) {
-        return io.emit("all", { success: false, data: error });
+        io.emit("all_movies", { success: false, data: error });
     }
 }
 export const getByTagId = async (io, id) => {
@@ -77,8 +77,8 @@ export const getByTagId = async (io, id) => {
                 hero: { every: { tags_id: id } }
             }
         })
-        return io.emit("tagbyid", { success: true, data: movies });
+        io.emit("tag_by_id", { success: true, data: movies });
     } catch (error) {
-        return io.emit("tagbyid", { success: false, data: error });
+        io.emit("tag_by_id", { success: false, data: error });
     }
 }

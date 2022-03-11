@@ -6,9 +6,7 @@ import cors from "cors"
 import { router as userRoute } from "./routes/userRoute"
 import { router as movieRoute } from "./routes/movieRoute"
 import { router as homeRoute } from "./routes/homeRoute"
-
-import { socketRoute } from "./socketcontroller/socketRoute/routes"
-import { imageConverter } from "./socketcontroller/helper/imageConverter"
+import { socketRoute } from "./socket/socketRoute/routes"
 const PORT = process.env.PORT || 3000
 config()
 const app = express()
@@ -24,17 +22,7 @@ app.use("/api/movie", movieRoute)
 app.use("/api/home", homeRoute)
 io.on("connection", async (socket) => {
     socketRoute(socket, io)
-    socket.on("upload", async (data) => {
-        imageConverter(data).then(res => {
-            socket.emit("upload", res)
-        }).catch(err => {
-            socket.emit("upload", err)
-        })
-        io.emit("upload", "asdasda")
-    })
 })
-
 server.listen(PORT, () => {
     console.log(`Listening on port ${PORT} run server db connecting`)
 })
-

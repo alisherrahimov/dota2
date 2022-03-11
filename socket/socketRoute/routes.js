@@ -1,6 +1,7 @@
 
-import { createComment, getAllComment } from "../auth"
+import { createComment, getAllComment, login, register } from "../auth"
 import { getById, home, getAll, getByTagId, searchMovie, } from "../home"
+import { userImageSet } from "../user"
 
 export const socketRoute = (socket, io) => {
     console.log("connected", socket.id)
@@ -20,18 +21,23 @@ export const socketRoute = (socket, io) => {
     socket.on("search", (text) => {
         searchMovie(io, text)
     })
-    socket.on("allmovies", () => {
+    socket.on("all_movies", () => {
         getAll(io)
     })
-    socket.on("createcomment", (data) => {
+    socket.on("create_comment", (data) => {
         createComment(io, data)
     })
-    socket.on("getallcomment", (data) => {
+    socket.on("get_all_comment", (data) => {
         getAllComment(io, data)
     })
-    socket.on("tagbyid", (data) => {
+    socket.on("tag_by_id", (data) => {
         getByTagId(io, data)
     })
+    socket.on("user_image", (user_id, image) => {
+        const { id } = user_id
+        userImageSet(io, id, image)
+    })
+
     socket.on("disconnect", () => {
         console.log("user disconnected", socket.id)
     })

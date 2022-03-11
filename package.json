@@ -18,7 +18,8 @@
     "multer": "^1.4.4",
     "sharp": "^0.29.3",
     "socket.io": "^4.4.1",
-    "socket.io-stream": "^0.9.1"
+    "socket.io-stream": "^0.9.1",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "nodemon": "^2.0.15",

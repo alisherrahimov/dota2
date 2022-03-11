@@ -7,13 +7,11 @@ export const register = async (io, data) => {
 
 
     if (!username || !email || !password) {
-        io.emit("register", { data: "Please fill all fields", success: false })
-        return
+        return io.emit("register", { data: "Please fill all fields", success: false })
     }
     const user = await client.user.findFirst({ where: { email: email } });
     if (user) {
-        io.emit("register", { data: "User already exists", success: false })
-        return
+        return io.emit("register", { data: "User already exists", success: false })
     }
     const hash = bcrypt.hashSync(password, 10);
 
@@ -59,10 +57,10 @@ export const createComment = async (io, data) => {
             }
         })
 
-        io.emit("createComment", { message: "comment wrote" })
+        io.emit("create_comment", { message: "comment wrote" })
 
     } catch (error) {
-        io.emit("createComment", { message: "comment not wrote" })
+        io.emit("create_comment", { message: "comment not wrote" })
     }
 }
 export const getAllComment = async (io, data) => {
@@ -72,8 +70,8 @@ export const getAllComment = async (io, data) => {
             where: { movies_id: id },
             include: { author: true }
         })
-        io.emit("getAllComment", { comment })
+        io.emit("get_all_comment", { comment })
     } catch (error) {
-        io.emit("getAllComment", { message: "comment not wrote" })
+        io.emit("get_all_comment", { message: "comment not wrote" })
     }
 }
