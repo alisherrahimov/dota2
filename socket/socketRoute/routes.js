@@ -1,5 +1,5 @@
 
-import { createComment, getAllComment, login, register } from "../auth"
+import { changePassword, createComment, getAllComment, login, recoveryPassword, register, verifyCode } from "../auth"
 import { getById, home, getAll, getByTagId, searchMovie, } from "../home"
 import { userImageSet } from "../user"
 
@@ -36,6 +36,15 @@ export const socketRoute = (socket, io) => {
     socket.on("user_image", (user_id, image) => {
         const { id } = user_id
         userImageSet(io, id, image)
+    })
+    socket.on("recovery_password", (data) => {
+        recoveryPassword(io, data)
+    })
+    socket.on("verify_code", (data) => {
+        verifyCode(io, data)
+    })
+    socket.on("change_password", (data) => {
+        changePassword(io, data)
     })
 
     socket.on("disconnect", () => {

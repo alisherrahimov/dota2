@@ -16,6 +16,7 @@
     "get-video-duration": "^4.0.0",
     "jsonwebtoken": "^8.5.1",
     "multer": "^1.4.4",
+    "nodemailer": "^6.7.2",
     "sharp": "^0.29.3",
     "socket.io": "^4.4.1",
     "socket.io-stream": "^0.9.1",
